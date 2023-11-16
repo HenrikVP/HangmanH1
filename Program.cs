@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        static string? guessedLetters;
+        static string guessedLetters = "";
         static int life;
         static string gallows = @"
 ╔═══╤═
@@ -16,7 +16,7 @@
             "\n\n\n   ╔", "\n\n\n    ╩", "\n\n\n     ╗", "\n\n\n\n   ╜", "\n\n\n\n     ╙", ""};
 
         static void Main(string[] args)
-        {           
+        {
             do Setup();
             while (Console.ReadKey(true).Key == ConsoleKey.Y);
         }
@@ -25,7 +25,7 @@
         {
             Console.CursorVisible = false;
             Console.Clear();
-            life = man.Length-1;
+            life = man.Length - 1;
             guessedLetters = "";
             DrawHangman();
 
@@ -75,7 +75,7 @@
 
         static bool ShowWord(string word)
         {
-            bool isDone = true;
+            bool isWon = true;
             for (int i = 0; i < word.Length; i++)
             {
                 if (guessedLetters.Contains(word[i]))
@@ -83,10 +83,10 @@
                 else
                 {
                     Write('_', 10 + i, 2);
-                    isDone = false;
+                    isWon = false;
                 }
             }
-            return isDone;
+            return isWon;
         }
 
         static char GuessLetter()
