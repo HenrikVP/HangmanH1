@@ -2,9 +2,7 @@
 {
     internal class Program
     {
-        static string guessedLetters = "";
-        static int life;
-        static string gallows = @"
+        const string gallows = @"
 ╔═══╤═
 ║
 ║ 
@@ -12,8 +10,10 @@
 ║ 
 ║ 
 ║ ";
-        static string[] man = {"    │", "\n    O", "\n\n   ─", "\n\n    ╫", "\n\n     ─",
+        static readonly string[] man = {"    │", "\n    O", "\n\n   ─", "\n\n    ╫", "\n\n     ─",
             "\n\n\n   ╔", "\n\n\n    ╩", "\n\n\n     ╗", "\n\n\n\n   ╜", "\n\n\n\n     ╙", ""};
+        static string usedLetters = "";
+        static int life;
 
         static void Main(string[] args)
         {
@@ -26,7 +26,7 @@
             Console.CursorVisible = false;
             Console.Clear();
             life = man.Length - 1;
-            guessedLetters = "";
+            usedLetters = "";
             DrawHangman();
 
             string[]? words = GetWordsFromApi();
@@ -65,7 +65,7 @@
         {
             if (ShowWord(word) || life == 0) return false;
             char letter = GuessLetter();
-            if (!CheckIfLetterIsUsed(word, letter))
+            if (!CheckLetter(word, letter))
             {
                 life--;
                 DrawHangman();
@@ -78,7 +78,7 @@
             bool isWon = true;
             for (int i = 0; i < word.Length; i++)
             {
-                if (guessedLetters.Contains(word[i]))
+                if (usedLetters.Contains(word[i]))
                     Write(word[i], 10 + i, 2);
                 else
                 {
@@ -95,16 +95,16 @@
             {
                 Write("Guess a letter", 10, 4, ConsoleColor.Yellow);
                 char character = char.ToUpper(Console.ReadKey(true).KeyChar);
-                if (char.IsLetter(character) && !guessedLetters.Contains(character))
+                if (char.IsLetter(character) && !usedLetters.Contains(character))
                 {
-                    guessedLetters += character;
+                    usedLetters += character;
                     ShowGuessedLetters();
                     return character;
                 }
             }
         }
 
-        static bool CheckIfLetterIsUsed(string word, char letter)
+        static bool CheckLetter(string word, char letter)
         {
             if (!word.Contains(letter))
             {
@@ -117,10 +117,10 @@
 
         static void ShowGuessedLetters()
         {
-            char[] characters = guessedLetters.ToArray();
+            char[] characters = usedLetters.ToArray();
             Array.Sort(characters);
-            guessedLetters = new string(characters);
-            Write($"Guessed: {guessedLetters}", 10, 8, ConsoleColor.Cyan);
+            usedLetters = new string(characters);
+            Write($"Used: {usedLetters}", 10, 8, ConsoleColor.Cyan);
         }
 
         static void Write(object t, int x, int y, ConsoleColor c = ConsoleColor.White)
