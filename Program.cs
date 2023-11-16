@@ -17,8 +17,8 @@
 
         static void Main(string[] args)
         {
-            do Setup();
-            while (Console.ReadKey(true).Key == ConsoleKey.Y);
+            do Setup(); 
+            while (Console.ReadKey(true).Key != ConsoleKey.N);
         }
 
         static void Setup()
@@ -39,8 +39,8 @@
 
             while (Game(word)) ;
 
-            if (life > 0) Write("Congratulations. You guessed the word. Try again?", 1, 1, ConsoleColor.Green);
-            else Write($"You lost. The word was {word}. Try again?", 1, 1, ConsoleColor.Red);
+            if (life > 0) Write("Congratulations. You guessed the word.\n Try again?", 1, 10, ConsoleColor.Green);
+            else Write($"You lost. The word was {word}.\n Try again?", 1, 10, ConsoleColor.Red);
         }
 
         static string[]? GetWordsFromApi()
@@ -78,7 +78,7 @@
             bool isWon = true;
             for (int i = 0; i < word.Length; i++)
             {
-                if (usedLetters.Contains(word[i]))
+                if (usedLetters.Contains(word[i]) || word[i] == '-')
                     Write(word[i], 10 + i, 2);
                 else
                 {
@@ -108,10 +108,10 @@
         {
             if (!word.Contains(letter))
             {
-                Write($"{letter} is a wrong guess".PadRight(30), 10, 6, ConsoleColor.Red);
+                Write($"{letter} is not in the word".PadRight(20), 10, 6, ConsoleColor.Red);
                 return false;
             }
-            Write($"You guessed the letter {letter}".PadRight(30), 10, 6, ConsoleColor.Green);
+            Write($"The word contains {letter}".PadRight(20), 10, 6, ConsoleColor.Green);
             return true;
         }
 
