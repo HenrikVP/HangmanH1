@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        const string gallows = "
+        const string gallows = @"
 ╔═══╤═
 ║
 ║ 
@@ -11,7 +11,7 @@
 ║ 
 ║ ";
         static readonly string[] man = {"    │", "\n    O", "\n\n   ─", "\n\n    ╫", "\n\n     ─",
-            "\n\n\n   ╔", "\n\n\n    ╩", "\n\n\n     ╗", "\n\n\n\n   ╜", "\n\n\n\n     ╙", ""};
+            "\n\n\n   ╔", "\n\n\n    ╩", "\n\n\n     ╗", "\n\n\n\n   ╜", "\n\n\n\n     ╙"};
         static string usedLetters = "";
         static int life;
 
@@ -61,10 +61,10 @@
             return words[i].ToUpper();
         }
 
-        static void Game(string word)
+        static bool Game(string word)
         {
             if (ShowWord(word) || life == 0) return false;
-            string letter = GuessLetter();
+            char letter = GuessLetter();
             if (!CheckLetter(word, letter))
             {
                 life--;
@@ -78,7 +78,7 @@
             bool isWon = true;
             for (int i = 0; i < word.Length; i++)
             {
-                if (usedLetters.Contains(word[i]) && word[i] == '-')
+                if (usedLetters.Contains(word[i]) || word[i] == '-')
                     Write(word[i], 10 + i, 2);
                 else
                 {
@@ -108,7 +108,7 @@
         {
             if (!word.Contains(letter))
             {
-                Writer($"{letter} is not in the word".PadRight(20), 10, 6, Color.Red);
+                Write($"{letter} is not in the word".PadRight(20), 10, 6, ConsoleColor.Red);
                 return false;
             }
             Write($"The word contains {letter}".PadRight(20), 10, 6, ConsoleColor.Green);
@@ -117,7 +117,7 @@
 
         static void ShowGuessedLetters()
         {
-            char characters = usedLetters.ToArray();
+            char[] characters = usedLetters.ToArray();
             Array.Sort(characters);
             usedLetters = new string(characters);
             Write($"Used: {usedLetters}", 10, 8, ConsoleColor.Cyan);
@@ -132,8 +132,8 @@
 
         static void DrawHangman()
         {
-            foreach (int i = man.Length - 1; j >= life; i--)
-                Write(man[j], 0, 3, ConsoleColor.Red);
+            for (int i = man.Length - 1; i >= life; i--)
+                Write(man[i], 0, 3, ConsoleColor.Red);
             Write(gallows, 0, 1, ConsoleColor.DarkBlue);
         }
     }
